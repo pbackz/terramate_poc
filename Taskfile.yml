@@ -1,0 +1,34 @@
+version: "3"
+
+env:
+  ENV: testing
+
+dotenv: ['.env']
+
+tasks:
+    check_tf:
+        desc: check terramate requirements before apply
+        cmds:
+        - terraform fmt -recursive -check -no-color
+        - terramate fmt --check
+        - terramate list
+        - terramate run -- terraform init
+        - terramate run -- terraform validate
+    check_tofu:
+        desc: check terramate requirements before apply
+        cmds:
+        - tofu fmt -recursive -check -no-color
+        - tofu fmt --check
+        - terramate list
+        - terramate run -- tofu init
+        - terramate run -- tofu validate
+    scan:
+        desc: terrascan files checking
+        cmds: 
+        - terrascan scan .
+    scan_gcp:
+        cmds:
+        - terrascan scan -t gcp --find-vuln
+    lint:
+        cmds:
+        - 'tflint --recursive --color --disable-rule=terraform_required_version'
